@@ -1,0 +1,7 @@
+- [x] 1. Create Data Models (`User.java`)
+- [x] 2. Create `SqliteDbHelper.java` (SQLite implementation)
+- [x] 3. Create `UserRepository.java` (Login/Register logic)
+- [x] 4. Create Layouts for Auth flow (`fragment_auth_welcome.xml`, `fragment_login.xml`, `fragment_register.xml`, `fragment_otp.xml`, `fragment_auth_success.xml`)
+- [x] 5. Create Fragments for Auth flow (`AuthWelcomeFragment`, `LoginFragment`, `RegisterFragment`, `OtpFragment`, `AuthSuccessFragment`)
+- [x] 6. Update Navigation Graph (`nav_graph.xml`)
+- [x] 7. Update `MainActivity.java` and `OnboardingHostFragment.java` to route to Auth flow

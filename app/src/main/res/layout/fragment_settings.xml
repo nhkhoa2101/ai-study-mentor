@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#F4F7F6">
+<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="18dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical"><ImageButton android:id="@+id/btnBack" android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/ic_back" android:contentDescription="Back" android:background="?attr/selectableItemBackgroundBorderless"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Learning &amp; privacy settings" android:textStyle="bold" android:textSize="22sp" android:textColor="#102A3A"/></LinearLayout>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Education level" android:textStyle="bold" android:layout_marginTop="18dp"/><Spinner android:id="@+id/spEducationLevel" android:layout_width="match_parent" android:layout_height="52dp"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Explanation style" android:textStyle="bold"/><Spinner android:id="@+id/spExplanationStyle" android:layout_width="match_parent" android:layout_height="52dp"/>
+    <androidx.appcompat.widget.SwitchCompat android:id="@+id/swNotifications" android:layout_width="match_parent" android:layout_height="56dp" android:text="Daily review reminders"/>
+    <androidx.appcompat.widget.SwitchCompat android:id="@+id/swTwoFactor" android:layout_width="match_parent" android:layout_height="56dp" android:text="Require second verification after login"/>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="Privacy: saved Q&amp;A remains in the app's private local database and is available offline. Passwords use PBKDF2 hashing. AI questions are sent to the configured AI provider only when no local cached answer exists." android:textColor="#526A73"/>
+    <Button android:id="@+id/btnSaveSettings" android:layout_width="match_parent" android:layout_height="54dp" android:layout_marginTop="24dp" android:text="Save settings"/>
+</LinearLayout></ScrollView>
+

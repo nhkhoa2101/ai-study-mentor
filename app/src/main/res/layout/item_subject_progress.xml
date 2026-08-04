@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="9dp"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="1dp"
+    app:strokeColor="#E5E7EB"
+    app:strokeWidth="1dp">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" android:padding="14dp">
+        <TextView android:id="@+id/tvSubjectIcon" android:layout_width="42dp" android:layout_height="42dp" android:background="@drawable/bg_profile_badge" android:gravity="center" android:textColor="#123B5D" android:textSize="14sp" android:textStyle="bold" />
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:orientation="vertical">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <TextView android:id="@+id/tvSubjectName" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:ellipsize="end" android:maxLines="1" android:textColor="#102A3A" android:textSize="14sp" android:textStyle="bold" />
+                <TextView android:id="@+id/tvSubjectProgress" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#123B5D" android:textSize="13sp" android:textStyle="bold" />
+            </LinearLayout>
+            <TextView android:id="@+id/tvSubjectStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:textColor="#60747D" android:textSize="11sp" />
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/pbSubjectProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                app:indicatorColor="#138A80"
+                app:trackColor="#E5E7EB"
+                app:trackCornerRadius="3dp"
+                app:trackThickness="6dp" />
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
+

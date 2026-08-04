@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient_auth"
+    android:fillViewport="true">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="22dp">
+        <ImageView android:layout_width="64dp" android:layout_height="64dp" android:layout_marginTop="22dp" android:background="@drawable/bg_auth_icon" android:contentDescription="AI Study Mentor" android:padding="15dp" android:src="@drawable/ic_welcome" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:gravity="center" android:text="Chào mừng trở lại" android:textColor="@android:color/white" android:textSize="26sp" android:textStyle="bold" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:gravity="center" android:text="Đăng nhập để tiếp tục hành trình học tập" android:textColor="#C9D8DC" android:textSize="13sp" />
+
+        <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" app:cardCornerRadius="20dp" app:cardElevation="4dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Email" app:boxCornerRadiusBottomEnd="12dp" app:boxCornerRadiusBottomStart="12dp" app:boxCornerRadiusTopEnd="12dp" app:boxCornerRadiusTopStart="12dp" app:boxStrokeColor="#138A80" app:startIconDrawable="@android:drawable/ic_dialog_email" app:startIconTint="#138A80">
+                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/etEmail" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textEmailAddress" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="Mật khẩu" app:boxCornerRadiusBottomEnd="12dp" app:boxCornerRadiusBottomStart="12dp" app:boxCornerRadiusTopEnd="12dp" app:boxCornerRadiusTopStart="12dp" app:boxStrokeColor="#138A80" app:endIconMode="password_toggle" app:startIconDrawable="@android:drawable/ic_lock_lock" app:startIconTint="#138A80">
+                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/etPassword" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPassword" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="end" android:layout_marginTop="8dp" android:text="Quên mật khẩu?" android:textColor="#138A80" android:textSize="12sp" android:textStyle="bold" />
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnSubmitLogin" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="18dp" android:text="Đăng nhập" android:textAllCaps="false" android:textColor="@android:color/white" android:textStyle="bold" app:backgroundTint="#138A80" app:cornerRadius="13dp" />
+                <TextView android:id="@+id/tvGoToRegister" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="18dp" android:gravity="center" android:padding="6dp" android:text="Chưa có tài khoản?  Đăng ký ngay" android:textColor="#12656B" android:textSize="13sp" android:textStyle="bold" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+</ScrollView>

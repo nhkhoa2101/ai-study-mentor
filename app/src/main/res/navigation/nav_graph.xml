@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph">
+    
+    <fragment
+        android:id="@+id/onboardingHostFragment"
+        android:name="com.example.aistudymentor.ui.fragments.OnboardingHostFragment"
+        android:label="Onboarding">
+        <action
+            android:id="@+id/action_onboardingHost_to_authWelcome"
+            app:destination="@id/authWelcomeFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/authWelcomeFragment"
+        android:name="com.example.aistudymentor.ui.auth.AuthWelcomeFragment"
+        android:label="Auth Welcome">
+        <action
+            android:id="@+id/action_authWelcome_to_login"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_authWelcome_to_register"
+            app:destination="@id/registerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.aistudymentor.ui.auth.LoginFragment"
+        android:label="Login">
+        <action
+            android:id="@+id/action_login_to_register"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_login_to_dashboard"
+            app:destination="@id/mainHostFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action android:id="@+id/action_login_to_otp" app:destination="@id/otpFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.aistudymentor.ui.auth.RegisterFragment"
+        android:label="Register">
+        <action
+            android:id="@+id/action_register_to_login"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_register_to_otp"
+            app:destination="@id/otpFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/otpFragment"
+        android:name="com.example.aistudymentor.ui.auth.OtpFragment"
+        android:label="OTP">
+        <action
+            android:id="@+id/action_otp_to_authSuccess"
+            app:destination="@id/authSuccessFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/authSuccessFragment"
+        android:name="com.example.aistudymentor.ui.auth.AuthSuccessFragment"
+        android:label="Success">
+        <action
+            android:id="@+id/action_authSuccess_to_dashboard"
+            app:destination="@id/mainHostFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/mainHostFragment"
+        android:name="com.example.aistudymentor.ui.fragments.MainHostFragment"
+        android:label="Main Hub">
+        <action
+            android:id="@+id/action_mainHost_to_ask"
+            app:destination="@id/askFragment" />
+        <action android:id="@+id/action_mainHost_to_history" app:destination="@id/historyFragment" />
+        <action android:id="@+id/action_mainHost_to_quiz" app:destination="@id/quizFragment" />
+        <action android:id="@+id/action_mainHost_to_settings" app:destination="@id/settingsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="com.example.aistudymentor.ui.fragments.DashboardFragment"
+        android:label="Dashboard">
+        <action
+            android:id="@+id/action_dashboard_to_ask"
+            app:destination="@id/askFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/askFragment"
+        android:name="com.example.aistudymentor.ui.fragments.AskFragment"
+        android:label="Ask Question">
+        <action
+            android:id="@+id/action_ask_to_answer"
+            app:destination="@id/answerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/answerFragment"
+        android:name="com.example.aistudymentor.ui.fragments.AnswerFragment"
+        android:label="AI Answer">
+        <argument
+            android:name="question"
+            app:argType="string" />
+    </fragment>
+    <fragment android:id="@+id/historyFragment" android:name="com.example.aistudymentor.ui.fragments.HistoryFragment" android:label="History" />
+    <fragment android:id="@+id/quizFragment" android:name="com.example.aistudymentor.ui.fragments.QuizFragment" android:label="Quiz" />
+    <fragment android:id="@+id/settingsFragment" android:name="com.example.aistudymentor.ui.fragments.SettingsFragment" android:label="Settings" />
+</navigation>

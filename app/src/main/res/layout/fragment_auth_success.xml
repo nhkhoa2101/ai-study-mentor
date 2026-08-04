@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient_auth"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="28dp">
+    <ImageView android:layout_width="92dp" android:layout_height="92dp" android:background="@drawable/bg_auth_icon" android:contentDescription="Hoàn tất" android:padding="22dp" android:src="@drawable/ic_welcome" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="22dp" android:gravity="center" android:text="Thiết lập hoàn tất" android:textColor="@android:color/white" android:textSize="27sp" android:textStyle="bold" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:gravity="center" android:text="Không gian học tập cá nhân của bạn đã sẵn sàng." android:textColor="#C9D8DC" android:textSize="14sp" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/btnStartLearning" android:layout_width="match_parent" android:layout_height="54dp" android:layout_marginTop="32dp" android:text="Bắt đầu học" android:textAllCaps="false" android:textColor="@android:color/white" android:textStyle="bold" app:backgroundTint="#138A80" app:cornerRadius="14dp" />
+</LinearLayout>

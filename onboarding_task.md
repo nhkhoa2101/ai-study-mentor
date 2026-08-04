@@ -1,0 +1,6 @@
+- [x] 1. Create Vector Drawables for Onboarding icons
+- [x] 2. Create Layouts (`fragment_onboarding_host.xml`, `fragment_onboarding_info.xml`, `fragment_onboarding_setup.xml`, `fragment_onboarding_finish.xml`)
+- [x] 3. Create Fragments (`OnboardingHostFragment`, `OnboardingInfoFragment`, `OnboardingSetupFragment`, `OnboardingFinishFragment`)
+- [x] 4. Create `OnboardingPagerAdapter`
+- [x] 5. Update Navigation Graph (`nav_graph.xml`)
+- [x] 6. Implement `SharedPreferences` in `MainActivity` to route to Onboarding or Dashboard

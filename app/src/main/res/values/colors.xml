@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="brand_navy">#0B2942</color>
+    <color name="brand_navy_light">#123B5D</color>
+    <color name="brand_teal_dark">#12656B</color>
+    <color name="brand_teal">#138A80</color>
+    <color name="brand_mint">#9FE3D5</color>
+    <color name="brand_gold">#F4C95D</color>
+    <color name="brand_surface">#F4F7F6</color>
+    <color name="brand_surface_teal">#E8F4F2</color>
+    <color name="brand_text">#102A3A</color>
+    <color name="brand_text_muted">#60747D</color>
+</resources>

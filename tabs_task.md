@@ -1,0 +1,7 @@
+- [x] 1. Create `fragment_path.xml` (Lộ trình - Path)
+- [x] 2. Create `PathFragment.java`
+- [x] 3. Create `fragment_progress.xml` (Tiến độ - Progress)
+- [x] 4. Create `ProgressFragment.java`
+- [x] 5. Create `fragment_profile.xml` (Hồ sơ - Profile)
+- [x] 6. Create `ProfileFragment.java`
+- [x] 7. Update `MainHostFragment.java` to link to the new fragments

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <ImageView
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="AI Study Mentor"
+        android:src="@drawable/ic_welcome" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/bg_ai_message"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Câu trả lời"
+            android:textColor="#138A80"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvAiDetailedAnswer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:lineSpacingExtra="2dp"
+            android:textColor="#374151"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="#E5E7EB" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Gợi ý các câu hỏi bạn có thể hỏi"
+            android:textColor="#60747D"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            app:chipSpacingHorizontal="4dp"
+            app:chipSpacingVertical="2dp"
+            app:singleLine="false">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/btnSimplify"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Đơn giản hơn"
+                android:textSize="11sp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/btnAlternative"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Cách khác"
+                android:textSize="11sp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/btnSummary"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Ý chính"
+                android:textSize="11sp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/btnMistakes"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Lỗi thường gặp"
+                android:textSize="11sp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/btnQuiz"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Tạo quiz"
+                android:textSize="11sp" />
+        </com.google.android.material.chip.ChipGroup>
+    </LinearLayout>
+</LinearLayout>
+

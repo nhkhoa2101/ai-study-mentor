@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingHorizontal="28dp">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="142dp"
+        android:layout_height="142dp"
+        app:cardBackgroundColor="#18FFFFFF"
+        app:cardCornerRadius="32dp"
+        app:cardElevation="0dp"
+        app:strokeColor="#559FE3D5"
+        app:strokeWidth="1dp">
+        <ImageView
+            android:id="@+id/ivIllustration"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="Minh họa tính năng"
+            android:padding="38dp"
+            android:src="@drawable/ic_welcome"
+            app:tint="#9FE3D5" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="HỌC TẬP THÔNG MINH"
+        android:textColor="#F4C95D"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="25sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:gravity="center"
+        android:lineSpacingExtra="4dp"
+        android:textColor="#D6E3E5"
+        android:textSize="15sp" />
+
+    <LinearLayout android:id="@+id/llBullets" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:visibility="gone" />
+</LinearLayout>

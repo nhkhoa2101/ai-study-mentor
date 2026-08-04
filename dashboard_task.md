@@ -1,0 +1,6 @@
+- [x] 1. Create `menu_bottom_nav.xml` (Icons for bottom navigation)
+- [x] 2. Create Layout and Class for `MainHostFragment` (Container for BottomNav and tabs)
+- [x] 3. Update `nav_graph.xml` to route to `MainHostFragment` after Login/Onboarding
+- [x] 4. Create empty placeholder fragments for Path, Progress, Profile tabs
+- [x] 5. Redesign `fragment_dashboard.xml` to match the new UI (Header, Daily Goal, Quick Actions, Recent)
+- [x] 6. Update `DashboardFragment.java` logic

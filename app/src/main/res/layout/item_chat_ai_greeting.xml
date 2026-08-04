@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_welcome"
+            android:layout_marginEnd="8dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Greeting Text -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_ai_message"
+                android:padding="16dp"
+                android:text="Xin chào!\nMình là Gia sư AI, luôn sẵn sàng hỗ trợ bạn học tập."
+                android:textColor="#102A3A"
+                android:textSize="14sp" />
+
+            <!-- Big Action Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp"
+                android:baselineAligned="false">
+                
+                <LinearLayout
+                    android:id="@+id/btnGreetingCamera"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/bg_ai_action"
+                    android:padding="12dp"
+                    android:layout_marginEnd="4dp">
+                    <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@android:drawable/ic_menu_camera" app:tint="#138A80"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Chụp bài tập" android:textSize="10sp" android:textColor="#138A80" android:textAlignment="center" android:layout_marginTop="4dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btnGreetingType"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/bg_ai_action"
+                    android:padding="12dp"
+                    android:layout_marginHorizontal="4dp">
+                    <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@android:drawable/ic_menu_edit" app:tint="#138A80"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Nhập câu hỏi" android:textSize="10sp" android:textColor="#138A80" android:textAlignment="center" android:layout_marginTop="4dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btnGreetingSuggest"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/bg_ai_action"
+                    android:padding="12dp"
+                    android:layout_marginStart="4dp">
+                    <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@android:drawable/ic_menu_info_details" app:tint="#F59E0B"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Gợi ý hôm nay" android:textSize="10sp" android:textColor="#F59E0B" android:textAlignment="center" android:layout_marginTop="4dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Suggested Questions -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gợi ý câu hỏi bạn có thể hỏi"
+                android:textStyle="bold"
+                android:textColor="#102A3A"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/chipSuggest1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giải phương trình"
+                android:background="@drawable/bg_chip_suggest"
+                android:textColor="#138A80"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="8dp"
+                android:layout_marginBottom="8dp" />
+                
+            <TextView
+                android:id="@+id/chipSuggest2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giải thích định luật Newton"
+                android:background="@drawable/bg_chip_suggest"
+                android:textColor="#138A80"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="8dp"
+                android:layout_marginBottom="8dp" />
+                
+            <TextView
+                android:id="@+id/chipSuggest3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tóm tắt bài Sinh"
+                android:background="@drawable/bg_chip_suggest"
+                android:textColor="#138A80"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="8dp" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
+

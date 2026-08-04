@@ -1,0 +1,6 @@
+- [x] 1. Create `ChatMessage.java` model with message types.
+- [x] 2. Create XML layouts for RecyclerView items (`item_chat_user.xml`, `item_chat_ai_greeting.xml`, `item_chat_ai_loading.xml`, `item_chat_ai_short.xml`, `item_chat_ai_detailed.xml`).
+- [x] 3. Create `ChatAdapter.java`.
+- [x] 4. Redesign `fragment_ask.xml` (Top bar, RecyclerView, Input bar).
+- [x] 5. Implement logic in `AskFragment.java` (simulated delay, adding items).
+- [x] 6. Clean up unused `AnswerFragment` references if necessary (or keep them for later).

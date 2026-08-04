@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="9dp"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="1dp"
+    app:strokeColor="#E5E7EB"
+    app:strokeWidth="1dp">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" android:padding="13dp">
+        <TextView android:id="@+id/tvPlanNumber" android:layout_width="38dp" android:layout_height="38dp" android:background="@drawable/bg_profile_badge" android:gravity="center" android:textColor="#123B5D" android:textStyle="bold" />
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="11dp" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:id="@+id/tvPlanTitle" android:layout_width="match_parent" android:layout_height="wrap_content" android:ellipsize="end" android:maxLines="2" android:textColor="#102A3A" android:textSize="14sp" android:textStyle="bold" />
+            <TextView android:id="@+id/tvPlanMeta" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:textColor="#60747D" android:textSize="11sp" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnCompletePlan" style="@style/Widget.MaterialComponents.Button.TextButton" android:layout_width="wrap_content" android:layout_height="36dp" android:minWidth="0dp" android:text="Hoàn thành" android:textAllCaps="false" android:textColor="#059669" android:textSize="11sp" />
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnDeletePlan" style="@style/Widget.MaterialComponents.Button.TextButton" android:layout_width="wrap_content" android:layout_height="36dp" android:minWidth="0dp" android:text="Xóa" android:textAllCaps="false" android:textColor="#DC2626" android:textSize="11sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
+
