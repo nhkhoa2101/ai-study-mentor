@@ -83,6 +83,7 @@
         <action android:id="@+id/action_mainHost_to_history" app:destination="@id/historyFragment" />
         <action android:id="@+id/action_mainHost_to_quiz" app:destination="@id/quizFragment" />
         <action android:id="@+id/action_mainHost_to_settings" app:destination="@id/settingsFragment" />
+        <action android:id="@+id/action_mainHost_to_featureDevelopment" app:destination="@id/featureDevelopmentFragment" />
     </fragment>
 
     <fragment
@@ -114,4 +115,10 @@
     <fragment android:id="@+id/historyFragment" android:name="com.example.aistudymentor.ui.fragments.HistoryFragment" android:label="History" />
     <fragment android:id="@+id/quizFragment" android:name="com.example.aistudymentor.ui.fragments.QuizFragment" android:label="Quiz" />
     <fragment android:id="@+id/settingsFragment" android:name="com.example.aistudymentor.ui.fragments.SettingsFragment" android:label="Settings" />
+    <fragment
+        android:id="@+id/featureDevelopmentFragment"
+        android:name="com.example.aistudymentor.ui.fragments.FeatureDevelopmentFragment"
+        android:label="Feature in development">
+        <argument android:name="featureName" app:argType="string" android:defaultValue="Tính năng" />
+    </fragment>
 </navigation>

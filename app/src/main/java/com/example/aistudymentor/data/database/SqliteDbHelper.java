@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 
 public class SqliteDbHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "studyMentorDB";
-    private static final int DB_VERSION = 5;
+    private static final int DB_VERSION = 6;
 
     public static final String TABLE_USERS = "users";
     public static final String ID_USER = "id";
@@ -48,6 +48,17 @@ public class SqliteDbHelper extends SQLiteOpenHelper {
     public static final String TYPE_QUIZ = "question_type";
     public static final String CORRECT_QUIZ = "is_correct";
     public static final String CREATED_AT_QUIZ = "created_at";
+
+    public static final String TABLE_PLAN_QUIZ = "plan_quiz_questions";
+    public static final String ID_PLAN_QUIZ = "id";
+    public static final String PLAN_ID_QUIZ = "plan_id";
+    public static final String EMAIL_PLAN_QUIZ_USER = "user_email";
+    public static final String PLAN_QUIZ_QUESTION = "question";
+    public static final String PLAN_QUIZ_ANSWER = "correct_answer";
+    public static final String PLAN_QUIZ_USER_ANSWER = "user_answer";
+    public static final String PLAN_QUIZ_POSITION = "position";
+    public static final String PLAN_QUIZ_ANSWERED = "is_answered";
+    public static final String PLAN_QUIZ_CORRECT = "is_correct";
 
     // Recent Activities Table
     public static final String TABLE_RECENT_ACTIVITIES = "recent_activities";
@@ -128,6 +139,7 @@ public class SqliteDbHelper extends SQLiteOpenHelper {
                 + "FOREIGN KEY(" + EMAIL_PLAN_USER + ") REFERENCES " + TABLE_USERS + "(" + EMAIL_USER + ") ON DELETE CASCADE)";
         db.execSQL(planTable);
         createLearningTables(db);
+        createPlanQuizTable(db);
     }
 
     private void createLearningTables(SQLiteDatabase db) {
@@ -156,6 +168,23 @@ public class SqliteDbHelper extends SQLiteOpenHelper {
                 + "FOREIGN KEY(" + EMAIL_QUIZ_USER + ") REFERENCES " + TABLE_USERS + "(" + EMAIL_USER + ") ON DELETE CASCADE)");
     }
 
+    private void createPlanQuizTable(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_PLAN_QUIZ + " ("
+                + ID_PLAN_QUIZ + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + PLAN_ID_QUIZ + " INTEGER NOT NULL, "
+                + EMAIL_PLAN_QUIZ_USER + " TEXT NOT NULL, "
+                + PLAN_QUIZ_QUESTION + " TEXT NOT NULL, "
+                + PLAN_QUIZ_ANSWER + " TEXT NOT NULL, "
+                + PLAN_QUIZ_USER_ANSWER + " TEXT, "
+                + PLAN_QUIZ_POSITION + " INTEGER NOT NULL, "
+                + PLAN_QUIZ_ANSWERED + " INTEGER DEFAULT 0, "
+                + PLAN_QUIZ_CORRECT + " INTEGER DEFAULT 0, "
+                + "FOREIGN KEY(" + PLAN_ID_QUIZ + ") REFERENCES " + TABLE_STUDY_PLAN + "(" + ID_PLAN + ") ON DELETE CASCADE, "
+                + "FOREIGN KEY(" + EMAIL_PLAN_QUIZ_USER + ") REFERENCES " + TABLE_USERS + "(" + EMAIL_USER + ") ON DELETE CASCADE)");
+        db.execSQL("CREATE INDEX IF NOT EXISTS idx_plan_quiz_owner ON " + TABLE_PLAN_QUIZ
+                + "(" + EMAIL_PLAN_QUIZ_USER + ", " + PLAN_ID_QUIZ + ", " + PLAN_QUIZ_POSITION + ")");
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 5) {
@@ -164,6 +193,9 @@ public class SqliteDbHelper extends SQLiteOpenHelper {
             addColumnIfMissing(db, TABLE_USERS, NOTIFICATIONS_USER, "INTEGER DEFAULT 1");
             addColumnIfMissing(db, TABLE_USERS, TWO_FACTOR_USER, "INTEGER DEFAULT 0");
             createLearningTables(db);
+        }
+        if (oldVersion < 6) {
+            createPlanQuizTable(db);
         }
     }
 

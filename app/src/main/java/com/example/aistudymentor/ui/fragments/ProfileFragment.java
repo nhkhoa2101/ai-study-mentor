@@ -33,12 +33,9 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         loadUserData(view);
 
-        View.OnClickListener openSettings = v -> Navigation
-                .findNavController(requireActivity(), R.id.nav_host_fragment)
-                .navigate(R.id.action_mainHost_to_settings);
-        view.findViewById(R.id.rowNotifications).setOnClickListener(openSettings);
-        view.findViewById(R.id.rowSecurity).setOnClickListener(openSettings);
-        view.findViewById(R.id.rowHelp).setOnClickListener(openSettings);
+        view.findViewById(R.id.rowNotifications).setOnClickListener(v -> openDevelopment("Thông báo"));
+        view.findViewById(R.id.rowSecurity).setOnClickListener(v -> openDevelopment("Bảo mật"));
+        view.findViewById(R.id.rowHelp).setOnClickListener(v -> openDevelopment("Trợ giúp"));
 
         view.findViewById(R.id.btnLogout).setOnClickListener(v -> {
             SharedPreferences prefs = requireActivity()
@@ -49,6 +46,13 @@ public class ProfileFragment extends Fragment {
             Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
                     .navigate(R.id.onboardingHostFragment, null, options);
         });
+    }
+
+    private void openDevelopment(String featureName) {
+        Bundle args = new Bundle();
+        args.putString("featureName", featureName);
+        Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+                .navigate(R.id.action_mainHost_to_featureDevelopment, args);
     }
 
     private void loadUserData(View view) {

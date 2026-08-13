@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class ProgressFragment extends Fragment {
+    private View rootView;
     @Nullable @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -30,7 +31,13 @@ public class ProgressFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        rootView = view;
         loadProgressData(view);
+    }
+
+    @Override public void onResume() {
+        super.onResume();
+        if (rootView != null) loadProgressData(rootView);
     }
 
     private void loadProgressData(View view) {

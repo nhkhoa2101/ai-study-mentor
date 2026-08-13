@@ -59,7 +59,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:text="Ôn lại nội dung đã hỏi • tối đa 10 câu"
+                    android:text="Quiz AI liên kết với lộ trình học tập"
                     android:textColor="#D5E9E7"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -89,7 +89,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dạng câu hỏi"
+                        android:text="Chọn lộ trình"
                         android:textColor="@color/brand_teal_dark"
                         android:textSize="12sp"
                         android:textStyle="bold" />
@@ -198,6 +198,18 @@
                         android:textStyle="bold"
                         app:cornerRadius="14dp"
                         app:strokeColor="@color/brand_teal" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCompleteQuizPlan"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="12dp"
+                        android:text="Hoàn thành lộ trình"
+                        android:textAllCaps="false"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        app:backgroundTint="@color/brand_teal"
+                        app:cornerRadius="14dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>

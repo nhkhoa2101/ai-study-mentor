@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.aistudymentor.data.database.SqliteDbHelper;
 import com.example.aistudymentor.data.models.User;
+import com.example.aistudymentor.security.LocalCrypto;
 import com.example.aistudymentor.security.PasswordHasher;
 
 public class UserRepository {
@@ -41,19 +42,19 @@ public class UserRepository {
         insertSubjectProgress(db, email, name, status, progress);
     }
 
-    private void insertStudyPlan(SQLiteDatabase db, String email, String type, String title, String subtitle, String info) {
+    private long insertStudyPlan(SQLiteDatabase db, String email, String type, String title, String subtitle, String info) {
         ContentValues values = new ContentValues();
         values.put(SqliteDbHelper.EMAIL_PLAN_USER, email);
         values.put(SqliteDbHelper.TYPE_PLAN, type);
         values.put(SqliteDbHelper.TITLE_PLAN, title);
         values.put(SqliteDbHelper.SUBTITLE_PLAN, subtitle);
         values.put(SqliteDbHelper.INFO_PLAN, info);
-        db.insert(SqliteDbHelper.TABLE_STUDY_PLAN, null, values);
+        return db.insert(SqliteDbHelper.TABLE_STUDY_PLAN, null, values);
     }
     
-    public void addStudyPlan(String email, String type, String title, String subtitle, String info) {
+    public long addStudyPlan(String email, String type, String title, String subtitle, String info) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        insertStudyPlan(db, email, type, title, subtitle, info);
+        return insertStudyPlan(db, email, type, title, subtitle, info);
     }
 
     public User loginUser(String email, String password) {
@@ -147,6 +148,11 @@ public class UserRepository {
     }
 
     private void updateDetectedSubjectProgress(SQLiteDatabase db, String email, String detectedSubject) {
+        updateDetectedSubjectProgress(db, email, detectedSubject, 3);
+    }
+
+    private void updateDetectedSubjectProgress(SQLiteDatabase db, String email,
+                                               String detectedSubject, int increment) {
         String[] aliases = subjectAliases(detectedSubject);
         int matchingId = -1;
         Cursor cursor = db.query(SqliteDbHelper.TABLE_SUBJECT_PROGRESS,
@@ -166,13 +172,18 @@ public class UserRepository {
         cursor.close();
 
         if (matchingId == -1) {
-            insertSubjectProgress(db, email, displaySubject(detectedSubject), "Đang học", 3);
+            int initial = Math.min(100, Math.max(0, increment));
+            insertSubjectProgress(db, email, displaySubject(detectedSubject),
+                    initial >= 100 ? "Hoàn thành" : "Đang học", initial);
         } else {
             db.execSQL("UPDATE " + SqliteDbHelper.TABLE_SUBJECT_PROGRESS + " SET "
                             + SqliteDbHelper.PROGRESS_SUBJECT + " = MIN(100, "
-                            + SqliteDbHelper.PROGRESS_SUBJECT + " + 3), "
-                            + SqliteDbHelper.STATUS_SUBJECT + " = 'Đang học' WHERE "
-                            + SqliteDbHelper.ID_SUBJECT + " = ?", new Object[]{matchingId});
+                            + SqliteDbHelper.PROGRESS_SUBJECT + " + ?), "
+                            + SqliteDbHelper.STATUS_SUBJECT + " = CASE WHEN "
+                            + SqliteDbHelper.PROGRESS_SUBJECT + " + ? >= 100 THEN 'Hoàn thành' "
+                            + "ELSE 'Đang học' END WHERE "
+                            + SqliteDbHelper.ID_SUBJECT + " = ?",
+                    new Object[]{increment, increment, matchingId});
         }
     }
 
@@ -340,6 +351,28 @@ public class UserRepository {
         public String title;
         public String subtitle;
         public String info;
+        public int quizTotal;
+        public int quizAnswered;
+
+        @Override public String toString() {
+            return title + (info == null || info.isEmpty() ? "" : " • " + info);
+        }
+    }
+
+    public static class PlanQuizQuestion {
+        public long id;
+        public int planId;
+        public String question;
+        public String correctAnswer;
+        public String userAnswer;
+        public int position;
+        public boolean answered;
+        public boolean correct;
+
+        public boolean isValid() {
+            return question != null && !question.trim().isEmpty()
+                    && correctAnswer != null && !correctAnswer.trim().isEmpty();
+        }
     }
 
     public java.util.List<StudyPlan> getStudyPlan(String email, String type) {
@@ -360,6 +393,10 @@ public class UserRepository {
                 
                 int infoIndex = cursor.getColumnIndex(SqliteDbHelper.INFO_PLAN);
                 if (infoIndex != -1 && !cursor.isNull(infoIndex)) sp.info = cursor.getString(infoIndex);
+
+                int[] quizProgress = getPlanQuizProgress(sp.id, email);
+                sp.quizTotal = quizProgress[0];
+                sp.quizAnswered = quizProgress[1];
                 
                 list.add(sp);
             } while (cursor.moveToNext());
@@ -375,8 +412,144 @@ public class UserRepository {
                 SqliteDbHelper.ID_PLAN + " = ?", new String[]{String.valueOf(id)});
     }
 
+    public boolean completeStudyPlanIfQuizFinished(int id, String email) {
+        int[] progress = getPlanQuizProgress(id, email);
+        if (progress[0] == 0 || progress[1] < progress[0]) return false;
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            Cursor cursor = db.query(SqliteDbHelper.TABLE_STUDY_PLAN,
+                    new String[]{SqliteDbHelper.SUBTITLE_PLAN, SqliteDbHelper.INFO_PLAN},
+                    SqliteDbHelper.ID_PLAN + " = ? AND " + SqliteDbHelper.EMAIL_PLAN_USER
+                            + " = ? AND " + SqliteDbHelper.TYPE_PLAN + " = 'PLAN_ITEM'",
+                    new String[]{String.valueOf(id), email}, null, null, null);
+            if (!cursor.moveToFirst()) {
+                cursor.close();
+                return false;
+            }
+            String subject = cursor.isNull(0) ? "General" : cursor.getString(0);
+            String duration = cursor.isNull(1) ? "20 phút" : cursor.getString(1);
+            cursor.close();
+
+            ContentValues values = new ContentValues();
+            values.put(SqliteDbHelper.TYPE_PLAN, "COMPLETED");
+            int rows = db.update(SqliteDbHelper.TABLE_STUDY_PLAN, values,
+                    SqliteDbHelper.ID_PLAN + " = ? AND " + SqliteDbHelper.EMAIL_PLAN_USER
+                            + " = ? AND " + SqliteDbHelper.TYPE_PLAN + " = 'PLAN_ITEM'",
+                    new String[]{String.valueOf(id), email});
+            if (rows == 0) return false;
+
+            int minutes = durationMinutes(duration);
+            int percentIncrease = Math.min(100, Math.max(1, Math.round(minutes * 100f / 60f)));
+            db.execSQL("UPDATE " + SqliteDbHelper.TABLE_USERS + " SET "
+                            + SqliteDbHelper.XP_USER + " = " + SqliteDbHelper.XP_USER + " + 15, "
+                            + SqliteDbHelper.LESSONS_LEARNED_USER + " = "
+                            + SqliteDbHelper.LESSONS_LEARNED_USER + " + 1, "
+                            + SqliteDbHelper.STUDY_TIME_USER + " = "
+                            + SqliteDbHelper.STUDY_TIME_USER + " + ?, "
+                            + SqliteDbHelper.DAILY_GOAL_PROGRESS_USER + " = MIN(100, "
+                            + SqliteDbHelper.DAILY_GOAL_PROGRESS_USER + " + ?), "
+                            + SqliteDbHelper.LEVEL_USER + " = 1 + (("
+                            + SqliteDbHelper.XP_USER + " + 15) / 100) WHERE "
+                            + SqliteDbHelper.EMAIL_USER + " = ?",
+                    new Object[]{minutes, percentIncrease, email});
+            updateDetectedSubjectProgress(db, email, subject, percentIncrease);
+            db.setTransactionSuccessful();
+            return true;
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    private int durationMinutes(String value) {
+        if (value == null) return 20;
+        java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("(\\d+)").matcher(value);
+        return matcher.find() ? Math.max(1, Integer.parseInt(matcher.group(1))) : 20;
+    }
+
+    public void replacePlanQuizQuestions(int planId, String email,
+                                         java.util.List<PlanQuizQuestion> questions) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            db.delete(SqliteDbHelper.TABLE_PLAN_QUIZ,
+                    SqliteDbHelper.PLAN_ID_QUIZ + " = ? AND " + SqliteDbHelper.EMAIL_PLAN_QUIZ_USER + " = ?",
+                    new String[]{String.valueOf(planId), email});
+            int position = 0;
+            for (PlanQuizQuestion question : questions) {
+                if (question == null || !question.isValid()) continue;
+                ContentValues values = new ContentValues();
+                values.put(SqliteDbHelper.PLAN_ID_QUIZ, planId);
+                values.put(SqliteDbHelper.EMAIL_PLAN_QUIZ_USER, email);
+                values.put(SqliteDbHelper.PLAN_QUIZ_QUESTION, LocalCrypto.encrypt(question.question));
+                values.put(SqliteDbHelper.PLAN_QUIZ_ANSWER, LocalCrypto.encrypt(question.correctAnswer));
+                values.put(SqliteDbHelper.PLAN_QUIZ_POSITION, position++);
+                db.insertOrThrow(SqliteDbHelper.TABLE_PLAN_QUIZ, null, values);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public java.util.List<PlanQuizQuestion> getPlanQuizQuestions(int planId, String email) {
+        java.util.List<PlanQuizQuestion> result = new java.util.ArrayList<>();
+        Cursor cursor = dbHelper.getReadableDatabase().query(SqliteDbHelper.TABLE_PLAN_QUIZ, null,
+                SqliteDbHelper.PLAN_ID_QUIZ + " = ? AND " + SqliteDbHelper.EMAIL_PLAN_QUIZ_USER + " = ?",
+                new String[]{String.valueOf(planId), email}, null, null,
+                SqliteDbHelper.PLAN_QUIZ_POSITION + " ASC");
+        while (cursor.moveToNext()) {
+            PlanQuizQuestion item = new PlanQuizQuestion();
+            item.id = cursor.getLong(cursor.getColumnIndexOrThrow(SqliteDbHelper.ID_PLAN_QUIZ));
+            item.planId = planId;
+            item.question = LocalCrypto.decrypt(cursor.getString(
+                    cursor.getColumnIndexOrThrow(SqliteDbHelper.PLAN_QUIZ_QUESTION)));
+            item.correctAnswer = LocalCrypto.decrypt(cursor.getString(
+                    cursor.getColumnIndexOrThrow(SqliteDbHelper.PLAN_QUIZ_ANSWER)));
+            int userAnswerIndex = cursor.getColumnIndex(SqliteDbHelper.PLAN_QUIZ_USER_ANSWER);
+            if (userAnswerIndex >= 0 && !cursor.isNull(userAnswerIndex)) {
+                item.userAnswer = LocalCrypto.decrypt(cursor.getString(userAnswerIndex));
+            }
+            item.position = cursor.getInt(cursor.getColumnIndexOrThrow(SqliteDbHelper.PLAN_QUIZ_POSITION));
+            item.answered = cursor.getInt(cursor.getColumnIndexOrThrow(SqliteDbHelper.PLAN_QUIZ_ANSWERED)) == 1;
+            item.correct = cursor.getInt(cursor.getColumnIndexOrThrow(SqliteDbHelper.PLAN_QUIZ_CORRECT)) == 1;
+            result.add(item);
+        }
+        cursor.close();
+        return result;
+    }
+
+    public void savePlanQuizAnswer(long questionId, String email, String userAnswer, boolean correct) {
+        ContentValues values = new ContentValues();
+        values.put(SqliteDbHelper.PLAN_QUIZ_USER_ANSWER, LocalCrypto.encrypt(userAnswer));
+        values.put(SqliteDbHelper.PLAN_QUIZ_ANSWERED, 1);
+        values.put(SqliteDbHelper.PLAN_QUIZ_CORRECT, correct ? 1 : 0);
+        dbHelper.getWritableDatabase().update(SqliteDbHelper.TABLE_PLAN_QUIZ, values,
+                SqliteDbHelper.ID_PLAN_QUIZ + " = ? AND " + SqliteDbHelper.EMAIL_PLAN_QUIZ_USER + " = ?",
+                new String[]{String.valueOf(questionId), email});
+    }
+
+    public int[] getPlanQuizProgress(int planId, String email) {
+        Cursor cursor = dbHelper.getReadableDatabase().rawQuery("SELECT COUNT(*), COALESCE(SUM("
+                        + SqliteDbHelper.PLAN_QUIZ_ANSWERED + "),0) FROM " + SqliteDbHelper.TABLE_PLAN_QUIZ
+                        + " WHERE " + SqliteDbHelper.PLAN_ID_QUIZ + " = ? AND "
+                        + SqliteDbHelper.EMAIL_PLAN_QUIZ_USER + " = ?",
+                new String[]{String.valueOf(planId), email});
+        int total = 0;
+        int answered = 0;
+        if (cursor.moveToFirst()) {
+            total = cursor.getInt(0);
+            answered = cursor.getInt(1);
+        }
+        cursor.close();
+        return new int[]{total, answered};
+    }
+
     public void deleteStudyPlan(int id) {
-        dbHelper.getWritableDatabase().delete(SqliteDbHelper.TABLE_STUDY_PLAN,
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete(SqliteDbHelper.TABLE_PLAN_QUIZ,
+                SqliteDbHelper.PLAN_ID_QUIZ + " = ?", new String[]{String.valueOf(id)});
+        db.delete(SqliteDbHelper.TABLE_STUDY_PLAN,
                 SqliteDbHelper.ID_PLAN + " = ?", new String[]{String.valueOf(id)});
     }
 }

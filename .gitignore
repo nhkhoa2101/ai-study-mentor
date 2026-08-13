@@ -1,7 +1,11 @@
 *.iml
 .gradle
+/.gradle-user-home/
+/.android-user-home/
+/.tmp/
 /local.properties
 /.idea/caches
+/.idea/
 /.idea/libraries
 /.idea/modules.xml
 /.idea/workspace.xml
@@ -9,6 +13,7 @@
 /.idea/assetWizardSettings.xml
 .DS_Store
 /build
+/app/build/
 /captures
 .externalNativeBuild
 .cxx

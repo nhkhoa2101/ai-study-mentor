@@ -74,6 +74,18 @@ public class AskFragment extends Fragment implements ChatAdapter.OnChatActionCli
     private String lastQuestion;
     private String lastAnswer;
 
+    /**
+     * Quota and anti-spam state must be isolated per signed-in account. SharedPreferences
+     * is application-wide, so unscoped keys would make a new account inherit the usage of
+     * the previous account.
+     */
+    private String usageKey(String name) {
+        String account = currentUserEmail == null
+                ? "signed_out"
+                : currentUserEmail.trim().toLowerCase(Locale.ROOT);
+        return "account_usage." + account + "." + name;
+    }
+
     private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null
@@ -322,13 +334,17 @@ public class AskFragment extends Fragment implements ChatAdapter.OnChatActionCli
     }
     private String encode(Bitmap bitmap){int max=800;float scale=Math.min((float)max/bitmap.getWidth(),(float)max/bitmap.getHeight());Bitmap output=scale<1?Bitmap.createScaledBitmap(bitmap,Math.round(bitmap.getWidth()*scale),Math.round(bitmap.getHeight()*scale),true):bitmap;ByteArrayOutputStream stream=new ByteArrayOutputStream();output.compress(Bitmap.CompressFormat.JPEG,80,stream);return android.util.Base64.encodeToString(stream.toByteArray(),android.util.Base64.NO_WRAP);}
     private boolean allowSubmission(String fingerprint, boolean isNewQuestion){
+        if(currentUserEmail==null||currentUserEmail.trim().isEmpty()){
+            Toast.makeText(requireContext(),"Vui lòng đăng nhập để sử dụng Chat AI.",Toast.LENGTH_LONG).show();
+            return false;
+        }
         SharedPreferences prefs=requireActivity().getSharedPreferences("AppPrefs",Context.MODE_PRIVATE);
         long now=System.currentTimeMillis();
-        long lastTime=prefs.getLong("last_question_time",0L);
+        long lastTime=prefs.getLong(usageKey("last_question_time"),0L);
         String normalized=fingerprint.trim().toLowerCase(Locale.ROOT).replaceAll("\\s+"," ");
-        String lastValue=prefs.getString("last_question_value","");
+        String lastValue=prefs.getString(usageKey("last_question_value"),"");
         int repeats=normalized.equals(lastValue)&&now-lastTime<60000L
-                ? prefs.getInt("repeated_question_count",0)+1 : 1;
+                ? prefs.getInt(usageKey("repeated_question_count"),0)+1 : 1;
         if(now-lastTime<800L){
             Toast.makeText(requireContext(),"Bạn đang gửi quá nhanh. Hãy chờ một chút.",Toast.LENGTH_SHORT).show();
             return false;
@@ -338,9 +354,9 @@ public class AskFragment extends Fragment implements ChatAdapter.OnChatActionCli
             return false;
         }
         String day=new SimpleDateFormat("yyyyMMdd",Locale.US).format(new Date());
-        boolean sameDay=day.equals(prefs.getString("daily_usage_day",""));
-        long tokenUsed=sameDay?prefs.getLong("daily_token_used",0L):0L;
-        int questionUsed=sameDay?prefs.getInt("daily_question_used",0):0;
+        boolean sameDay=day.equals(prefs.getString(usageKey("daily_usage_day"),""));
+        long tokenUsed=sameDay?prefs.getLong(usageKey("daily_token_used"),0L):0L;
+        int questionUsed=sameDay?prefs.getInt(usageKey("daily_question_used"),0):0;
         if(tokenUsed>=DAILY_TOKEN_QUOTA){
             Toast.makeText(requireContext(),"Bạn đã sử dụng hết quota token hôm nay.",Toast.LENGTH_LONG).show();
             updateQuotaDisplay();
@@ -351,11 +367,11 @@ public class AskFragment extends Fragment implements ChatAdapter.OnChatActionCli
             updateQuotaDisplay();
             return false;
         }
-        SharedPreferences.Editor editor=prefs.edit().putLong("last_question_time",now)
-                .putString("last_question_value",normalized)
-                .putInt("repeated_question_count",repeats)
-                .putString("daily_usage_day",day);
-        if(isNewQuestion)editor.putInt("daily_question_used",questionUsed+1);
+        SharedPreferences.Editor editor=prefs.edit().putLong(usageKey("last_question_time"),now)
+                .putString(usageKey("last_question_value"),normalized)
+                .putInt(usageKey("repeated_question_count"),repeats)
+                .putString(usageKey("daily_usage_day"),day);
+        if(isNewQuestion)editor.putInt(usageKey("daily_question_used"),questionUsed+1);
         editor.apply();
         updateQuotaDisplay();
         return true;
@@ -366,10 +382,10 @@ public class AskFragment extends Fragment implements ChatAdapter.OnChatActionCli
         if(usage==null||usage.getTotalTokenCount()<=0)return;
         SharedPreferences prefs=requireActivity().getSharedPreferences("AppPrefs",Context.MODE_PRIVATE);
         String day=new SimpleDateFormat("yyyyMMdd",Locale.US).format(new Date());
-        long used=day.equals(prefs.getString("daily_usage_day",""))
-                ? prefs.getLong("daily_token_used",0L):0L;
-        prefs.edit().putString("daily_usage_day",day)
-                .putLong("daily_token_used",used+usage.getTotalTokenCount()).apply();
+        long used=day.equals(prefs.getString(usageKey("daily_usage_day"),""))
+                ? prefs.getLong(usageKey("daily_token_used"),0L):0L;
+        prefs.edit().putString(usageKey("daily_usage_day"),day)
+                .putLong(usageKey("daily_token_used"),used+usage.getTotalTokenCount()).apply();
         updateQuotaDisplay();
     }
 
@@ -388,9 +404,9 @@ public class AskFragment extends Fragment implements ChatAdapter.OnChatActionCli
     private void refundQuestionQuota(){
         SharedPreferences prefs=requireActivity().getSharedPreferences("AppPrefs",Context.MODE_PRIVATE);
         String day=new SimpleDateFormat("yyyyMMdd",Locale.US).format(new Date());
-        if(!day.equals(prefs.getString("daily_usage_day","")))return;
-        int used=prefs.getInt("daily_question_used",0);
-        if(used>0)prefs.edit().putInt("daily_question_used",used-1).apply();
+        if(!day.equals(prefs.getString(usageKey("daily_usage_day"),"")))return;
+        int used=prefs.getInt(usageKey("daily_question_used"),0);
+        if(used>0)prefs.edit().putInt(usageKey("daily_question_used"),used-1).apply();
         updateQuotaDisplay();
     }
 
@@ -398,9 +414,9 @@ public class AskFragment extends Fragment implements ChatAdapter.OnChatActionCli
         if(tvTokenQuota==null||tvQuestionQuota==null)return;
         SharedPreferences prefs=requireActivity().getSharedPreferences("AppPrefs",Context.MODE_PRIVATE);
         String day=new SimpleDateFormat("yyyyMMdd",Locale.US).format(new Date());
-        boolean sameDay=day.equals(prefs.getString("daily_usage_day",""));
-        long tokenUsed=sameDay?prefs.getLong("daily_token_used",0L):0L;
-        int questionUsed=sameDay?prefs.getInt("daily_question_used",0):0;
+        boolean sameDay=day.equals(prefs.getString(usageKey("daily_usage_day"),""));
+        long tokenUsed=sameDay?prefs.getLong(usageKey("daily_token_used"),0L):0L;
+        int questionUsed=sameDay?prefs.getInt(usageKey("daily_question_used"),0):0;
         long tokenRemaining=Math.max(0L,DAILY_TOKEN_QUOTA-tokenUsed);
         int questionRemaining=Math.max(0,DAILY_QUESTION_LIMIT-questionUsed);
         int quotaRemainingPercent=(int)Math.min(100L,
